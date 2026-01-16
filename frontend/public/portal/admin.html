@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard · Silent Syntax Portal</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <main>
+    <div class="page-shell">
+      <!-- Enhanced Admin Navigation -->
+      <div class="navbar-lite" style="background: var(--glass-strong); border: var(--border-strong); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 32px; backdrop-filter: blur(20px);">
+        <div class="brand">
+          <div class="pill" style="background: linear-gradient(135deg, var(--error-light), var(--warning-light)); border: 1px solid rgba(239, 68, 68, 0.3);">
+            <i class="fas fa-user-shield" style="color: var(--error);"></i>
+            Admin Control Panel
+          </div>
+          <span data-greeting class="pill" style="background: var(--accent-light); border: 1px solid rgba(99, 102, 241, 0.3); color: var(--accent);">
+            <i class="fas fa-crown"></i>
+            System Administrator
+          </span>
+        </div>
+        <div class="nav" style="flex-wrap: wrap;">
+          <a href="student.html" data-role-link="1" style="background: var(--success-light); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--success);">
+            <i class="fas fa-graduation-cap"></i>
+            Student View
+          </a>
+          <a href="company.html" data-role-link="2" style="background: var(--accent-2-light); border: 1px solid rgba(6, 182, 212, 0.3); color: var(--accent-2);">
+            <i class="fas fa-building"></i>
+            Company View
+          </a>
+          <a href="admin.html" class="active">
+            <i class="fas fa-cog"></i>
+            Admin Panel
+          </a>
+        </div>
+        <div class="user-badge" style="background: var(--glass); border: var(--border); border-radius: var(--radius-sm); padding: 12px 16px;">
+          <div class="user-avatar" data-user-avatar style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--error), var(--warning)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; margin-right: 12px;">A</div>
+          <div>
+            <div data-user-name style="font-weight: 600; color: var(--text);">Administrator</div>
+            <div class="minor" data-user-email style="font-size: 12px;">admin@university.edu</div>
+          </div>
+          <button class="btn btn-ghost" data-logout style="margin-left: 16px;">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- System Overview Cards -->
+      <section class="grid grid-4" id="analytics-cards" style="margin-bottom: 32px;">
+        <div class="card" style="text-align: center; position: relative; overflow: hidden;">
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--success), #059669);"></div>
+          <i class="fas fa-users" style="font-size: 32px; color: var(--success); margin-bottom: 16px;"></i>
+          <h3 style="font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--text);">1,247</h3>
+          <p class="minor">Total Students</p>
+          <div style="margin-top: 12px;">
+            <span class="badge badge-green" style="font-size: 10px;">
+              <i class="fas fa-arrow-up"></i>
+              +12% this month
+            </span>
+          </div>
+        </div>
+        <div class="card" style="text-align: center; position: relative; overflow: hidden;">
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--accent-2), #0891b2);"></div>
+          <i class="fas fa-building" style="font-size: 32px; color: var(--accent-2); margin-bottom: 16px;"></i>
+          <h3 style="font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--text);">89</h3>
+          <p class="minor">Partner Companies</p>
+          <div style="margin-top: 12px;">
+            <span class="badge badge-cyan" style="font-size: 10px;">
+              <i class="fas fa-arrow-up"></i>
+              +5 new
+            </span>
+          </div>
+        </div>
+        <div class="card" style="text-align: center; position: relative; overflow: hidden;">
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--accent), var(--accent-hover));"></div>
+          <i class="fas fa-briefcase" style="font-size: 32px; color: var(--accent); margin-bottom: 16px;"></i>
+          <h3 style="font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--text);">156</h3>
+          <p class="minor">Active Job Postings</p>
+          <div style="margin-top: 12px;">
+            <span class="badge badge-blue" style="font-size: 10px;">
+              <i class="fas fa-clock"></i>
+              23 pending
+            </span>
+          </div>
+        </div>
+        <div class="card" style="text-align: center; position: relative; overflow: hidden;">
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--warning), #d97706);"></div>
+          <i class="fas fa-chart-line" style="font-size: 32px; color: var(--warning); margin-bottom: 16px;"></i>
+          <h3 style="font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--text);">78%</h3>
+          <p class="minor">Placement Rate</p>
+          <div style="margin-top: 12px;">
+            <span class="badge badge-amber" style="font-size: 10px;">
+              <i class="fas fa-target"></i>
+              Target: 85%
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Analytics Dashboard -->
+      <section class="grid grid-2" style="margin-bottom: 32px; align-items: start;">
+        <div class="card">
+          <div class="section-title" style="margin-bottom: 20px;">
+            <h3 style="display: flex; align-items: center; gap: 12px;">
+              <i class="fas fa-chart-pie" style="color: var(--accent);"></i>
+              Placement Analytics
+            </h3>
+            <span class="badge badge-blue">Real-time</span>
+          </div>
+          <div id="placement-rate" style="text-align: center; padding: 20px;">
+            <div style="width: 120px; height: 120px; margin: 0 auto 20px; border-radius: 50%; background: conic-gradient(var(--success) 0deg 280deg, var(--glass) 280deg 360deg); display: flex; align-items: center; justify-content: center; position: relative;">
+              <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--bg-card); display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                <span style="font-size: 24px; font-weight: 700; color: var(--success);">78%</span>
+                <span style="font-size: 10px; color: var(--text-muted);">PLACED</span>
+              </div>
+            </div>
+            <div class="grid grid-2" style="gap: 16px; text-align: center;">
+              <div>
+                <h4 style="color: var(--success); font-size: 20px; margin-bottom: 4px;">972</h4>
+                <p class="minor" style="font-size: 12px;">Students Placed</p>
+              </div>
+              <div>
+                <h4 style="color: var(--text-muted); font-size: 20px; margin-bottom: 4px;">275</h4>
+                <p class="minor" style="font-size: 12px;">Still Searching</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title" style="margin-bottom: 20px;">
+            <h3 style="display: flex; align-items: center; gap: 12px;">
+              <i class="fas fa-industry" style="color: var(--accent-2);"></i>
+              Job Categories
+            </h3>
+            <span class="badge badge-cyan">Distribution</span>
+          </div>
+          <div id="job-types" style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="job-category" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: var(--glass); border-radius: var(--radius-sm); border: var(--border);">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <i class="fas fa-code" style="color: var(--accent); font-size: 18px;"></i>
+                <span style="font-weight: 500;">Software Development</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 60px; height: 6px; background: var(--glass); border-radius: 3px; overflow: hidden;">
+                  <div style="width: 65%; height: 100%; background: var(--accent);"></div>
+                </div>
+                <span style="font-size: 12px; color: var(--text-muted);">65%</span>
+              </div>
+            </div>
+            <div class="job-category" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: var(--glass); border-radius: var(--radius-sm); border: var(--border);">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <i class="fas fa-chart-bar" style="color: var(--success); font-size: 18px;"></i>
+                <span style="font-weight: 500;">Data Science</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 60px; height: 6px; background: var(--glass); border-radius: 3px; overflow: hidden;">
+                  <div style="width: 25%; height: 100%; background: var(--success);"></div>
+                </div>
+                <span style="font-size: 12px; color: var(--text-muted);">25%</span>
+              </div>
+            </div>
+            <div class="job-category" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: var(--glass); border-radius: var(--radius-sm); border: var(--border);">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <i class="fas fa-palette" style="color: var(--warning); font-size: 18px;"></i>
+                <span style="font-weight: 500;">UI/UX Design</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 60px; height: 6px; background: var(--glass); border-radius: 3px; overflow: hidden;">
+                  <div style="width: 10%; height: 100%; background: var(--warning);"></div>
+                </div>
+                <span style="font-size: 12px; color: var(--text-muted);">10%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Branch-wise Statistics -->
+      <section style="margin-bottom: 32px;">
+        <div class="section-title" style="margin-bottom: 20px;">
+          <h3 style="display: flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 700;">
+            <i class="fas fa-sitemap" style="color: var(--accent-2);"></i>
+            Branch-wise Placement Statistics
+          </h3>
+          <span class="badge badge-blue">
+            <i class="fas fa-sync-alt"></i>
+            Live Data
+          </span>
+        </div>
+        <div class="grid grid-3" id="branch-stats">
+          <div class="card" style="position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-hover));"></div>
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+              <i class="fas fa-laptop-code" style="font-size: 24px; color: var(--accent);"></i>
+              <div>
+                <h4 style="margin-bottom: 4px; font-weight: 600;">Computer Science</h4>
+                <p class="minor" style="font-size: 12px;">Total: 450 students</p>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 24px; font-weight: 700; color: var(--success);">85%</span>
+              <span class="badge badge-green" style="font-size: 10px;">
+                <i class="fas fa-arrow-up"></i>
+                +3%
+              </span>
+            </div>
+          </div>
+          <div class="card" style="position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--success), #059669);"></div>
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+              <i class="fas fa-microchip" style="font-size: 24px; color: var(--success);"></i>
+              <div>
+                <h4 style="margin-bottom: 4px; font-weight: 600;">Electronics</h4>
+                <p class="minor" style="font-size: 12px;">Total: 320 students</p>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 24px; font-weight: 700; color: var(--success);">72%</span>
+              <span class="badge badge-green" style="font-size: 10px;">
+                <i class="fas fa-arrow-up"></i>
+                +1%
+              </span>
+            </div>
+          </div>
+          <div class="card" style="position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent-2), #0891b2);"></div>
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+              <i class="fas fa-cogs" style="font-size: 24px; color: var(--accent-2);"></i>
+              <div>
+                <h4 style="margin-bottom: 4px; font-weight: 600;">Mechanical</h4>
+                <p class="minor" style="font-size: 12px;">Total: 280 students</p>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 24px; font-weight: 700; color: var(--warning);">68%</span>
+              <span class="badge badge-amber" style="font-size: 10px;">
+                <i class="fas fa-minus"></i>
+                -2%
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Management Actions -->
+      <section class="grid grid-2" style="align-items: start;">
+        <div>
+          <div class="section-title" style="margin-bottom: 20px;">
+            <h3 style="display: flex; align-items: center; gap: 12px;">
+              <i class="fas fa-user-clock" style="color: var(--warning);"></i>
+              Pending User Verifications
+            </h3>
+            <span class="badge badge-amber">
+              <i class="fas fa-exclamation-triangle"></i>
+              Requires Action
+            </span>
+          </div>
+          <div id="pending-users" class="grid" style="gap: 12px;">
+            <div class="card" style="padding: 16px; display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--success-light); display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-graduation-cap" style="color: var(--success);"></i>
+                </div>
+                <div>
+                  <h5 style="margin-bottom: 4px; font-weight: 600;">John Doe</h5>
+                  <p class="minor" style="font-size: 12px;">Student · CS Department</p>
+                </div>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn btn-success" style="padding: 8px 12px; font-size: 12px;">
+                  <i class="fas fa-check"></i>
+                  Approve
+                </button>
+                <button class="btn btn-error" style="padding: 8px 12px; font-size: 12px;">
+                  <i class="fas fa-times"></i>
+                  Reject
+                </button>
+              </div>
+            </div>
+            <div class="card" style="padding: 16px; display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent-2-light); display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-building" style="color: var(--accent-2);"></i>
+                </div>
+                <div>
+                  <h5 style="margin-bottom: 4px; font-weight: 600;">TechCorp Inc.</h5>
+                  <p class="minor" style="font-size: 12px;">Company · Software</p>
+                </div>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn btn-success" style="padding: 8px 12px; font-size: 12px;">
+                  <i class="fas fa-check"></i>
+                  Approve
+                </button>
+                <button class="btn btn-error" style="padding: 8px 12px; font-size: 12px;">
+                  <i class="fas fa-times"></i>
+                  Reject
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title" style="margin-bottom: 20px;">
+            <h3 style="display: flex; align-items: center; gap: 12px;">
+              <i class="fas fa-clipboard-check" style="color: var(--accent);"></i>
+              Job Posting Approvals
+            </h3>
+            <span class="badge badge-blue">
+              <i class="fas fa-hourglass-half"></i>
+              Pending Review
+            </span>
+          </div>
+          <div id="pending-jobs" class="grid" style="gap: 12px;">
+            <div class="card" style="padding: 16px;">
+              <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 12px;">
+                <div>
+                  <h5 style="margin-bottom: 4px; font-weight: 600;">Senior Software Engineer</h5>
+                  <p class="minor" style="font-size: 12px; margin-bottom: 8px;">Google · Full-time · ₹25-30 LPA</p>
+                  <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                    <span class="badge badge-blue" style="font-size: 10px;">Remote</span>
+                    <span class="badge badge-green" style="font-size: 10px;">3+ Years</span>
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                <button class="btn btn-secondary" style="padding: 8px 12px; font-size: 12px;">
+                  <i class="fas fa-eye"></i>
+                  Review
+                </button>
+                <button class="btn btn-success" style="padding: 8px 12px; font-size: 12px;">
+                  <i class="fas fa-check"></i>
+                  Approve
+                </button>
+                <button class="btn btn-error" style="padding: 8px 12px; font-size: 12px;">
+                  <i class="fas fa-times"></i>
+                  Reject
+                </button>
+              </div>
+            </div>
+            <div class="card" style="padding: 16px;">
+              <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 12px;">
+                <div>
+                  <h5 style="margin-bottom: 4px; font-weight: 600;">Data Scientist Intern</h5>
+                  <p class="minor" style="font-size: 12px; margin-bottom: 8px;">Microsoft · Internship · ₹50k/month</p>
+                  <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                    <span class="badge badge-cyan" style="font-size: 10px;">Hybrid</span>
+                    <span class="badge badge-amber" style="font-size: 10px;">Fresher</span>
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                <button class="btn btn-secondary" style="padding: 8px 12px; font-size: 12px;">
+                  <i class="fas fa-eye"></i>
+                  Review
+                </button>
+                <button class="btn btn-success" style="padding: 8px 12px; font-size: 12px;">
+                  <i class="fas fa-check"></i>
+                  Approve
+                </button>
+                <button class="btn btn-error" style="padding: 8px 12px; font-size: 12px;">
+                  <i class="fas fa-times"></i>
+                  Reject
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    // Add interactive functionality
+    document.addEventListener('DOMContentLoaded', () => {
+      // Animate cards on load
+      const cards = document.querySelectorAll('.card');
+      cards.forEach((card, index) => {
+        setTimeout(() => {
+          card.style.animation = 'slideInUp 0.6s ease-out forwards';
+        }, index * 50);
+      });
+
+      // Add click handlers for approval buttons
+      document.querySelectorAll('.btn-success, .btn-error').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const action = btn.classList.contains('btn-success') ? 'approved' : 'rejected';
+          const card = btn.closest('.card');
+          
+          // Visual feedback
+          card.style.transform = 'scale(0.95)';
+          card.style.opacity = '0.7';
+          
+          setTimeout(() => {
+            card.style.transform = 'scale(1)';
+            card.style.opacity = '1';
+            card.style.background = action === 'approved' ? 'var(--success-light)' : 'var(--error-light)';
+            card.style.border = action === 'approved' ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(239, 68, 68, 0.3)';
+          }, 200);
+        });
+      });
+    });
+  </script>
+
+  <style>
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .section-title h3 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .navbar-lite {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .user-badge {
+      display: flex;
+      align-items: center;
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar-lite {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+      }
+      
+      .grid-4 {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      }
+      
+      .grid-3 {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+      
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</body>
+</html>
+          <div id="pending-jobs" class="grid" style="gap: 12px;"></div>
+        </div>
+      </section>
+
+      <section class="grid grid-2" style="margin-top: 22px; align-items: start;">
+        <div>
+          <div class="section-title"><h3>Announcements</h3><span class="badge badge-blue">Broadcast</span></div>
+          <div id="admin-announcements" class="grid" style="gap: 12px;"></div>
+        </div>
+        <div class="card">
+          <div class="section-title"><h3>Create announcement</h3></div>
+          <form id="announcement-form" class="grid" style="gap: 12px;">
+            <div>
+              <label for="title">Title</label>
+              <input name="title" id="title" required placeholder="Placement drive update">
+            </div>
+            <div>
+              <label for="message">Message</label>
+              <textarea name="message" id="message" required placeholder="Share details, deadlines, links"></textarea>
+            </div>
+            <div>
+              <label for="target_role">Target Audience</label>
+              <select name="target_role" id="target_role">
+                <option value="">All</option>
+                <option value="1">Students</option>
+                <option value="2">Companies</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Create Announcement</button>
+          </form>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script>
+    const API_BASE = '/api';
+
+    function getAuth() {
+      try {
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || 'null');
+        if (!token || !user) return null;
+        return { token, user };
+      } catch (_) { return null; }
+    }
+
+    function showToast(msg, type = 'info') {
+      let stack = document.getElementById('toast-stack');
+      if (!stack) {
+        stack = document.createElement('div');
+        stack.id = 'toast-stack';
+        stack.className = 'toast-stack';
+        document.body.appendChild(stack);
+      }
+      const t = document.createElement('div');
+      t.className = `toast ${type}`;
+      t.textContent = msg;
+      stack.appendChild(t);
+      setTimeout(() => t.remove(), 4200);
+    }
+
+    async function api(path, opts = {}) {
+      const auth = getAuth();
+      if (!auth) { window.location.href = 'index.html'; return; }
+      const headers = { 'Content-Type': 'application/json', ...opts.headers };
+      headers.Authorization = `Bearer ${auth.token}`;
+      const resp = await fetch(`${API_BASE}${path}`, {
+        method: opts.method || 'GET',
+        headers,
+        body: opts.body ? JSON.stringify(opts.body) : undefined,
+      }).catch(networkError => {
+        throw new Error('Cannot connect to server. Please ensure the backend is running.');
+      });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || 'Request failed');
+      return data;
+    }
+
+    const auth = getAuth();
+    if (!auth || auth.user.role_id !== 3) { window.location.href = 'index.html'; }
+
+    if (document.querySelector('[data-user-name]')) {
+      document.querySelector('[data-user-name]').textContent = 'Admin';
+    }
+    if (document.querySelector('[data-user-email]')) {
+      document.querySelector('[data-user-email]').textContent = auth.user.email;
+    }
+    if (document.querySelector('[data-user-avatar]')) {
+      document.querySelector('[data-user-avatar]').textContent = 'A';
+    }
+
+    document.querySelector('[data-logout]')?.addEventListener('click', () => {
+      localStorage.clear();
+      window.location.href = 'index.html';
+    });
+
+    const analyticsCards = document.querySelector('#analytics-cards');
+    const placementRate = document.querySelector('#placement-rate');
+    const branchStats = document.querySelector('#branch-stats');
+    const jobTypes = document.querySelector('#job-types');
+    const pendingUsersEl = document.querySelector('#pending-users');
+    const pendingJobsEl = document.querySelector('#pending-jobs');
+    const announcementsEl = document.querySelector('#admin-announcements');
+
+    async function load() {
+      try {
+        const [analytics, users, jobs, anns] = await Promise.all([
+          api('/admin/analytics'),
+          api('/admin/pending-users'),
+          api('/admin/pending-jobs'),
+          api('/admin/announcements'),
+        ]);
+        renderAnalytics(analytics || {});
+        renderPendingUsers(users || []);
+        renderPendingJobs(jobs || []);
+        renderAnnouncements(anns || []);
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    function renderAnalytics(a) {
+      const overall = a.overall || {};
+      analyticsCards.innerHTML = `
+        <div class="card animate"><p class="minor">Total Students</p><h2>${overall.total_students || 0}</h2></div>
+        <div class="card animate"><p class="minor">Placed</p><h2>${overall.placed_students || 0}</h2></div>
+        <div class="card animate"><p class="minor">Companies</p><h2>${overall.total_companies || 0}</h2></div>
+        <div class="card animate"><p class="minor">Active Jobs</p><h2>${overall.total_jobs || 0}</h2></div>`;
+      const rate = overall.placement_percentage || 0;
+      placementRate.innerHTML = `<div class="card"><h3>Placement Rate: ${rate}%</h3><div class="progress"><span style="width:${rate}%"></span></div></div>`;
+      branchStats.innerHTML = (a.branch_wise || []).map(b => `<div class="card"><h4>${b.branch}</h4><div class="progress"><span style="width:${b.total ? (b.placed/b.total)*100 : 0}%"></span></div></div>`).join('');
+      jobTypes.innerHTML = (a.job_types || []).map(j => `<div class="card"><h4>${j.type}</h4><span>${j.count}</span></div>`).join('');
+    }
+
+    function renderPendingUsers(users) {
+      pendingUsersEl.innerHTML = users.length ? users.map(u => `
+        <div class="card"><h4>${u.role_id === 1 ? 'Student' : 'Company'}</h4>
+        <p class="minor">${u.email}</p>
+        <button class="btn btn-primary" data-verify="${u.id}">Verify</button></div>
+      `).join('') : '<p class="minor">No pending users</p>';
+      document.querySelectorAll('[data-verify]').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const id = e.target.getAttribute('data-verify');
+          try {
+            await api(`/admin/verify-user/${id}`, { method: 'PUT' });
+            showToast('User verified', 'success');
+            load();
+          } catch (err) {
+            showToast(err.message, 'error');
+          }
+        });
+      });
+    }
+
+    function renderPendingJobs(jobs) {
+      pendingJobsEl.innerHTML = jobs.length ? jobs.map(j => `
+        <div class="card"><h4>${j.title}</h4>
+        <p class="minor">${j.company_name}</p>
+        <div class="inline-actions">
+          <button class="btn btn-primary" data-approve="${j.id}">Approve</button>
+          <button class="btn btn-ghost" data-reject="${j.id}">Reject</button>
+        </div></div>
+      `).join('') : '<p class="minor">No pending jobs</p>';
+      document.querySelectorAll('[data-approve], [data-reject]').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const id = e.target.getAttribute('data-approve') || e.target.getAttribute('data-reject');
+          const status = e.target.hasAttribute('data-approve') ? 'Approved' : 'Rejected';
+          try {
+            await api(`/admin/approve-job/${id}`, { method: 'PUT', body: { status } });
+            showToast(`Job ${status.toLowerCase()}`, 'success');
+            load();
+          } catch (err) {
+            showToast(err.message, 'error');
+          }
+        });
+      });
+    }
+
+    function renderAnnouncements(list) {
+      if (!announcementsEl) return;
+      
+      if (list.length === 0) {
+        announcementsEl.innerHTML = '<p class="minor" style="text-align: center; padding: 20px;">No announcements created yet</p>';
+        return;
+      }
+      
+      announcementsEl.innerHTML = list.map(ann => {
+        const date = new Date(ann.created_at).toLocaleDateString('en-US', { 
+          month: 'short', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        const targetBadge = ann.target_role === 1 ? '<span class="badge badge-blue">Students</span>' : 
+                            ann.target_role === 2 ? '<span class="badge badge-green">Companies</span>' : 
+                            '<span class="badge badge-amber">All</span>';
+        return `
+          <div class="card animate" style="padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+              <h4 style="margin: 0; font-size: 16px;">${ann.title}</h4>
+              ${targetBadge}
+            </div>
+            <p class="minor" style="margin: 8px 0; line-height: 1.5;">${ann.message}</p>
+            <div class="minor" style="font-size: 12px; margin-top: 8px; color: #9ca3af;">
+              📅 ${date}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    const form = document.querySelector('#announcement-form');
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const payload = {
+        title: data.get('title'),
+        message: data.get('message'),
+        target_role: data.get('target_role') ? parseInt(data.get('target_role')) : null,
+      };
+      const btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Posting...';
+      try {
+        await api('/admin/announcements', { method: 'POST', body: payload });
+        showToast('Announcement posted', 'success');
+        form.reset();
+        load();
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Create Announcement';
+      }
+    });
+
+    load();
+  </script>
+</body>
+</html>

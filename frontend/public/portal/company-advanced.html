@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Company Dashboard - Advanced</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f7fa; color: #333; }
+    
+    .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+    
+    .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 8px; margin-bottom: 20px; }
+    .navbar h1 { font-size: 24px; }
+    .navbar button { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+    .navbar button:hover { background: rgba(255,255,255,0.3); }
+    
+    .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e0e0e0; }
+    .tab-btn { background: none; border: none; padding: 12px 24px; cursor: pointer; font-size: 14px; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s; }
+    .tab-btn.active { color: #667eea; border-bottom-color: #667eea; }
+    .tab-btn:hover { color: #667eea; }
+    
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    
+    .card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .card h2 { margin-bottom: 15px; color: #333; }
+    
+    .wizard { background: white; border-radius: 8px; padding: 30px; }
+    .wizard-step { display: none; }
+    .wizard-step.active { display: block; animation: fadeIn 0.3s; }
+    
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; }
+    .form-group textarea { min-height: 100px; resize: vertical; }
+    
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    
+    .btn { padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; transition: all 0.3s; }
+    .btn-primary { background: #667eea; color: white; }
+    .btn-primary:hover { background: #5568d3; }
+    .btn-secondary { background: #e0e0e0; color: #333; }
+    .btn-secondary:hover { background: #d0d0d0; }
+    .btn-success { background: #48bb78; color: white; }
+    .btn-danger { background: #f56565; color: white; }
+    
+    .wizard-footer { display: flex; justify-content: space-between; margin-top: 30px; }
+    .step-indicator { display: flex; gap: 10px; margin-bottom: 20px; }
+    .step { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #e0e0e0; color: #666; font-weight: bold; }
+    .step.active { background: #667eea; color: white; }
+    .step.completed { background: #48bb78; color: white; }
+    
+    .data-grid { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    .data-grid th { background: #f5f5f5; padding: 12px; text-align: left; font-weight: 600; border-bottom: 2px solid #ddd; }
+    .data-grid td { padding: 12px; border-bottom: 1px solid #eee; }
+    .data-grid tr:hover { background: #f9f9f9; }
+    
+    .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .badge-primary { background: #e0e7ff; color: #667eea; }
+    .badge-success { background: #c6f6d5; color: #22543d; }
+    .badge-warning { background: #feebc8; color: #7c2d12; }
+    .badge-danger { background: #fed7d7; color: #742a2a; }
+    .badge-ineligible { background: #fed7d7; color: #742a2a; }
+    
+    .filter-bar { display: flex; gap: 12px; margin-bottom: 15px; flex-wrap: wrap; }
+    .filter-bar input, .filter-bar select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; }
+    
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+    .modal.active { display: flex; }
+    .modal-content { background: white; border-radius: 8px; padding: 30px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #999; }
+    
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+    .stat-card { background: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .stat-card .value { font-size: 32px; font-weight: bold; color: #667eea; }
+    .stat-card .label { color: #999; margin-top: 5px; }
+    
+    .alert { padding: 12px 16px; border-radius: 4px; margin-bottom: 15px; }
+    .alert-success { background: #c6f6d5; color: #22543d; border: 1px solid #9ae6b4; }
+    .alert-error { background: #fed7d7; color: #742a2a; border: 1px solid #fc8181; }
+    .alert-info { background: #bee3f8; color: #2c5282; border: 1px solid #90cdf4; }
+    
+    .checkbox-group { margin-top: 10px; }
+    .checkbox-item { display: flex; gap: 10px; margin-bottom: 8px; }
+    .checkbox-item input { margin-top: 2px; }
+    
+    .interview-calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin-top: 15px; }
+    .calendar-day { padding: 10px; border: 1px solid #ddd; border-radius: 4px; text-align: center; cursor: pointer; }
+    .calendar-day:hover { background: #f0f0f0; }
+    .calendar-day.selected { background: #667eea; color: white; }
+    
+    .offer-preview { background: #f9f9f9; border: 1px solid #ddd; padding: 20px; border-radius: 4px; margin-top: 15px; font-size: 13px; line-height: 1.6; }
+    
+    .ineligible-reason { color: #d32f2f; font-size: 12px; margin-top: 3px; }
+    
+    .action-buttons { display: flex; gap: 8px; }
+    .action-buttons button { padding: 6px 12px; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Navbar -->
+    <div class="navbar">
+      <h1>Company Dashboard</h1>
+      <div>
+        <span data-company-name>Company</span>
+        <button data-logout>Logout</button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="overview">Overview</button>
+      <button class="tab-btn" data-tab="create-drive">Create Drive</button>
+      <button class="tab-btn" data-tab="applicants">Applicants</button>
+      <button class="tab-btn" data-tab="interviews">Interview Scheduling</button>
+      <button class="tab-btn" data-tab="offers">Offer Letters</button>
+    </div>
+
+    <!-- ============ TAB: OVERVIEW ============ -->
+    <div id="overview" class="tab-content active">
+      <div class="stats" id="stats-container"></div>
+      
+      <div class="card">
+        <h2>Active Job Postings</h2>
+        <div id="jobs-list"></div>
+      </div>
+    </div>
+
+    <!-- ============ TAB: CREATE DRIVE ============ -->
+    <div id="create-drive" class="tab-content">
+      <div class="wizard">
+        <div class="step-indicator" id="step-indicator"></div>
+
+        <!-- Step 1: Basic Details -->
+        <div class="wizard-step active" data-step="1">
+          <h2>Step 1: Job Details</h2>
+          <form id="step1-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Job Title *</label>
+                <input type="text" name="title" required placeholder="e.g., Software Engineer">
+              </div>
+              <div class="form-group">
+                <label>Job Type *</label>
+                <select name="job_type" required>
+                  <option>Full-Time</option>
+                  <option>Internship</option>
+                  <option>Part-Time</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Location *</label>
+                <input type="text" name="location" required placeholder="e.g., Bangalore, Remote">
+              </div>
+              <div class="form-group">
+                <label>CTC *</label>
+                <input type="text" name="ctc" required placeholder="e.g., 8-12 LPA">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Description *</label>
+              <textarea name="description" required placeholder="Job description and responsibilities..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Requirements</label>
+              <textarea name="requirements" placeholder="Skills, experience, qualifications..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Application Deadline *</label>
+              <input type="date" name="application_deadline" required>
+            </div>
+          </form>
+        </div>
+
+        <!-- Step 2: Eligibility -->
+        <div class="wizard-step" data-step="2">
+          <h2>Step 2: Eligibility Criteria</h2>
+          <form id="step2-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Minimum CGPA</label>
+                <input type="number" name="min_cgpa" step="0.1" value="0" placeholder="0.0">
+              </div>
+              <div class="form-group">
+                <label>Minimum 10th Percentage</label>
+                <input type="number" name="min_10th_percentage" step="0.1" placeholder="60">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Minimum 12th Percentage</label>
+              <input type="number" name="min_12th_percentage" step="0.1" placeholder="60">
+            </div>
+
+            <div class="form-group">
+              <label>Eligible Branches (Select all that apply)</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" name="branches" value="CSE"> <label>Computer Science</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" name="branches" value="IT"> <label>Information Technology</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" name="branches" value="ECE"> <label>Electronics & Communication</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" name="branches" value="ME"> <label>Mechanical Engineering</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" name="branches" value="CE"> <label>Civil Engineering</label>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Step 3: Hiring Process -->
+        <div class="wizard-step" data-step="3">
+          <h2>Step 3: Configure Hiring Process</h2>
+          <form id="step3-form">
+            <p style="margin-bottom: 15px; color: #666;">Define the rounds in your hiring process</p>
+            
+            <div id="rounds-container"></div>
+            
+            <button type="button" class="btn btn-secondary" onclick="addRound()">+ Add Round</button>
+          </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="wizard-footer">
+          <button class="btn btn-secondary" id="prev-btn" onclick="previousStep()">Previous</button>
+          <button class="btn btn-primary" id="next-btn" onclick="nextStep()">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ TAB: APPLICANTS ============ -->
+    <div id="applicants" class="tab-content">
+      <div class="card">
+        <h2>Manage Applicants</h2>
+        
+        <div class="filter-bar">
+          <select id="job-filter" onchange="loadApplicants()">
+            <option value="">-- Select Job --</option>
+          </select>
+          <input type="number" id="cgpa-filter" placeholder="Min CGPA" step="0.1" onchange="loadApplicants()">
+          <select id="branch-filter" onchange="loadApplicants()">
+            <option value="">All Branches</option>
+            <option>CSE</option>
+            <option>IT</option>
+            <option>ECE</option>
+            <option>ME</option>
+            <option>CE</option>
+          </select>
+          <select id="status-filter" onchange="loadApplicants()">
+            <option value="">All Statuses</option>
+            <option>Applied</option>
+            <option>Shortlisted</option>
+            <option>Interview</option>
+            <option>Selected</option>
+            <option>Rejected</option>
+          </select>
+          <label style="display: flex; align-items: center; gap: 5px;">
+            <input type="checkbox" id="hide-ineligible" onchange="loadApplicants()">
+            Hide Ineligible
+          </label>
+          <button class="btn btn-secondary" onclick="downloadResumes()">Download Resumes</button>
+          <button class="btn btn-secondary" onclick="openBulkUpload()">Bulk Upload Status</button>
+        </div>
+
+        <table class="data-grid" id="applicants-table">
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="select-all"></th>
+              <th>Name</th>
+              <th>Branch</th>
+              <th>CGPA</th>
+              <th>Phone</th>
+              <th>Skills</th>
+              <th>ATS Score</th>
+              <th>Current Round</th>
+              <th>Status</th>
+              <th>Applied</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="applicants-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ TAB: INTERVIEWS ============ -->
+    <div id="interviews" class="tab-content">
+      <div class="card">
+        <h2>Interview Scheduling</h2>
+        
+        <div style="margin-bottom: 15px;">
+          <label>Select Job:</label>
+          <select id="interview-job-filter" onchange="loadInterviewRounds()">
+            <option value="">-- Select Job --</option>
+          </select>
+        </div>
+
+        <div id="hiring-rounds-container"></div>
+
+        <div id="interview-slots-container" style="margin-top: 20px;"></div>
+      </div>
+    </div>
+
+    <!-- ============ TAB: OFFERS ============ -->
+    <div id="offers" class="tab-content">
+      <div class="card">
+        <h2>Offer Letters</h2>
+        
+        <table class="data-grid" id="offers-table">
+          <thead>
+            <tr>
+              <th>Student Name</th>
+              <th>Position</th>
+              <th>CTC</th>
+              <th>Status</th>
+              <th>Sent Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="offers-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bulk Upload Modal -->
+  <div id="bulk-upload-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Bulk Upload Application Status</h2>
+        <button class="modal-close" onclick="closeBulkUpload()">×</button>
+      </div>
+      <form id="bulk-upload-form" onsubmit="submitBulkUpload(event)">
+        <p style="margin-bottom: 15px; color: #666;">Upload a CSV file with columns: student_id, status</p>
+        <input type="file" id="bulk-file" accept=".csv,.xlsx" required>
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+          <button type="submit" class="btn btn-primary">Upload</button>
+          <button type="button" class="btn btn-secondary" onclick="closeBulkUpload()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Offer Letter Modal -->
+  <div id="offer-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Generate Offer Letter</h2>
+        <button class="modal-close" onclick="closeOfferModal()">×</button>
+      </div>
+      <form id="offer-form" onsubmit="submitOfferLetter(event)">
+        <input type="hidden" id="offer-application-id">
+        <div class="form-group">
+          <label>Designation *</label>
+          <input type="text" name="designation" required>
+        </div>
+        <div class="form-group">
+          <label>CTC *</label>
+          <input type="text" name="ctc" required>
+        </div>
+        <div class="form-group">
+          <label>Annual CTC</label>
+          <input type="number" name="annual_ctc" step="0.01">
+        </div>
+        <div class="form-group">
+          <label>Job Location *</label>
+          <input type="text" name="job_location" required>
+        </div>
+        <div class="form-group">
+          <label>Joining Date</label>
+          <input type="date" name="joining_date">
+        </div>
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+          <button type="submit" class="btn btn-primary">Generate & Send</button>
+          <button type="button" class="btn btn-secondary" onclick="closeOfferModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = '/api';
+    let currentStep = 1;
+    let currentJobId = null;
+    let selectedApplicants = new Set();
+
+    // ========== Authentication ==========
+    function getAuth() {
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user') || 'null');
+      if (!token || !user) {
+        window.location.href = 'index.html';
+        return null;
+      }
+      return { token, user };
+    }
+
+    function showToast(msg, type = 'info') {
+      const alert = document.createElement('div');
+      alert.className = `alert alert-${type}`;
+      alert.textContent = msg;
+      document.body.insertBefore(alert, document.body.firstChild);
+      setTimeout(() => alert.remove(), 4000);
+    }
+
+    async function api(path, opts = {}) {
+      const auth = getAuth();
+      if (!auth) return;
+      
+      const headers = { 'Content-Type': 'application/json', ...opts.headers };
+      headers.Authorization = `Bearer ${auth.token}`;
+      
+      const resp = await fetch(`${API_BASE}${path}`, {
+        method: opts.method || 'GET',
+        headers,
+        body: opts.body ? JSON.stringify(opts.body) : undefined,
+      }).catch(networkError => {
+        throw new Error('Cannot connect to server. Please ensure the backend is running.');
+      });
+      
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || 'Request failed');
+      return data;
+    }
+
+    // ========== Tab Navigation ==========
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const tabName = e.target.dataset.tab;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        document.getElementById(tabName).classList.add('active');
+      });
+    });
+
+    // ========== WIZARD FUNCTIONS ==========
+    function initializeWizard() {
+      const steps = document.querySelectorAll('.wizard-step').length;
+      let indicator = '';
+      for (let i = 1; i <= steps; i++) {
+        indicator += `<div class="step" data-step="${i}">${i}</div>`;
+      }
+      document.getElementById('step-indicator').innerHTML = indicator;
+      updateWizardUI();
+    }
+
+    function updateWizardUI() {
+      document.querySelectorAll('.wizard-step').forEach((step, idx) => {
+        step.classList.toggle('active', idx + 1 === currentStep);
+      });
+      document.querySelectorAll('.step').forEach(step => {
+        const stepNum = parseInt(step.dataset.step);
+        step.classList.remove('active', 'completed');
+        if (stepNum < currentStep) step.classList.add('completed');
+        if (stepNum === currentStep) step.classList.add('active');
+      });
+      document.getElementById('prev-btn').style.display = currentStep === 1 ? 'none' : 'block';
+      document.getElementById('next-btn').textContent = currentStep === 3 ? 'Publish' : 'Next';
+    }
+
+    async function nextStep() {
+      if (currentStep === 1) {
+        const form = document.getElementById('step1-form');
+        const data = new FormData(form);
+        const formData = Object.fromEntries(data);
+        try {
+          const response = await api('/company/create-drive/step1', { method: 'POST', body: formData });
+          currentJobId = response.job_id;
+          currentStep = 2;
+          updateWizardUI();
+        } catch (e) {
+          showToast(e.message, 'error');
+        }
+      } else if (currentStep === 2) {
+        const form = document.getElementById('step2-form');
+        const data = new FormData(form);
+        const branches = Array.from(data.getAll('branches'));
+        const body = {
+          min_cgpa: parseFloat(data.get('min_cgpa')) || 0,
+          eligible_branches: branches,
+          min_10th_percentage: parseFloat(data.get('min_10th_percentage')) || null,
+          min_12th_percentage: parseFloat(data.get('min_12th_percentage')) || null
+        };
+        try {
+          await api(`/company/create-drive/${currentJobId}/step2`, { method: 'POST', body });
+          currentStep = 3;
+          updateWizardUI();
+        } catch (e) {
+          showToast(e.message, 'error');
+        }
+      } else if (currentStep === 3) {
+        const rounds = [];
+        document.querySelectorAll('[data-round]').forEach(round => {
+          rounds.push({
+            type: round.querySelector('[name="round_type"]').value,
+            description: round.querySelector('[name="round_description"]').value,
+            duration_minutes: parseInt(round.querySelector('[name="round_duration"]').value) || 60
+          });
+        });
+        try {
+          await api(`/company/create-drive/${currentJobId}/step3`, { method: 'POST', body: { rounds } });
+          showToast('Drive published successfully!', 'success');
+          resetWizard();
+          document.querySelector('[data-tab="overview"]').click();
+        } catch (e) {
+          showToast(e.message, 'error');
+        }
+      }
+    }
+
+    function previousStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        updateWizardUI();
+      }
+    }
+
+    function addRound() {
+      const container = document.getElementById('rounds-container');
+      const roundNum = container.children.length + 1;
+      const html = `
+        <div data-round class="card" style="margin-bottom: 15px;">
+          <h4>Round ${roundNum}</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Round Type *</label>
+              <select name="round_type" required>
+                <option value="Aptitude Test">Aptitude Test</option>
+                <option value="Group Discussion">Group Discussion</option>
+                <option value="Technical Interview">Technical Interview</option>
+                <option value="HR Interview">HR Interview</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Duration (minutes)</label>
+              <input type="number" name="round_duration" value="60">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="round_description" placeholder="Details about this round..."></textarea>
+          </div>
+          <button type="button" class="btn btn-danger" onclick="this.parentElement.remove()">Remove</button>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', html);
+    }
+
+    function resetWizard() {
+      currentStep = 1;
+      currentJobId = null;
+      document.getElementById('step1-form').reset();
+      document.getElementById('step2-form').reset();
+      document.getElementById('rounds-container').innerHTML = '';
+      updateWizardUI();
+    }
+
+    // ========== APPLICANTS TAB ==========
+    async function loadApplicants() {
+      const jobId = document.getElementById('job-filter').value;
+      if (!jobId) return;
+
+      try {
+        const hideIneligible = document.getElementById('hide-ineligible').checked;
+        const minCgpa = document.getElementById('cgpa-filter').value;
+        const branch = document.getElementById('branch-filter').value;
+        const status = document.getElementById('status-filter').value;
+
+        const params = new URLSearchParams({
+          hide_ineligible: hideIneligible,
+          ...(minCgpa && { min_cgpa: minCgpa }),
+          ...(branch && { branch }),
+          ...(status && { status })
+        });
+
+        const response = await api(`/company/job/${jobId}/applicants/advanced?${params}`);
+        
+        // Also fetch hiring rounds for this job
+        let hiringRounds = [];
+        try {
+          const roundsResponse = await api(`/company/hiring-rounds/job/${jobId}`);
+          hiringRounds = roundsResponse.rounds || [];
+        } catch (e) {
+          console.log('No hiring rounds configured for this job');
+        }
+        
+        const tbody = document.getElementById('applicants-tbody');
+        tbody.innerHTML = '';
+
+        response.applicants.forEach(app => {
+          // Determine ATS score badge color
+          let atsScoreColor = 'badge-danger';
+          if (app.ats_score >= 75) atsScoreColor = 'badge-success';
+          else if (app.ats_score >= 50) atsScoreColor = 'badge-warning';
+          
+          // Get current round info
+          const currentRound = app.current_round_number && hiringRounds[app.current_round_number - 1] 
+            ? hiringRounds[app.current_round_number - 1].round_name 
+            : 'Screening';
+          
+          // Build status dropdown options based on hiring rounds
+          let statusOptions = `
+            <option value="Applied" ${app.status === 'Applied' ? 'selected' : ''}>Applied</option>
+            <option value="Screening" ${app.status === 'Screening' ? 'selected' : ''}>Screening</option>
+          `;
+          
+          hiringRounds.forEach((round, idx) => {
+            statusOptions += `
+              <option value="Round ${idx + 1}: ${round.round_name}" ${app.status === `Round ${idx + 1}: ${round.round_name}` ? 'selected' : ''}>
+                Round ${idx + 1}: ${round.round_name}
+              </option>
+            `;
+          });
+          
+          statusOptions += `
+            <option value="Selected" ${app.status === 'Selected' ? 'selected' : ''}>Selected</option>
+            <option value="Rejected" ${app.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+            <option value="On Hold" ${app.status === 'On Hold' ? 'selected' : ''}>On Hold</option>
+          `;
+          
+          const row = `
+            <tr class="${app.eligible ? '' : 'style="opacity: 0.6;"'}">
+              <td><input type="checkbox" class="applicant-checkbox" value="${app.student_id}"></td>
+              <td>
+                <strong>${app.name}</strong>
+                ${app.ats_feedback ? `<div class="ineligible-reason" style="color: #666;">Last Updated: ${new Date(app.ats_calculated_at || Date.now()).toLocaleDateString()}</div>` : ''}
+              </td>
+              <td>${app.branch}</td>
+              <td><strong>${app.cgpa}</strong></td>
+              <td>${app.phone || 'N/A'}</td>
+              <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${app.skills}">${app.skills}</td>
+              <td>
+                <span class="badge ${atsScoreColor}" title="${app.ats_feedback || 'No ATS analysis yet'}">
+                  ${app.ats_score !== null && app.ats_score !== undefined ? Math.round(app.ats_score) + '%' : 'Pending'}
+                </span>
+              </td>
+              <td>
+                <span class="badge badge-primary" title="Current stage in hiring process">
+                  ${currentRound}
+                </span>
+              </td>
+              <td><span class="badge badge-primary">${app.status}</span></td>
+              <td>${new Date(app.applied_at).toLocaleDateString()}</td>
+              <td>
+                <div class="action-buttons">
+                  <select class="form-group" style="padding: 6px; min-width: 140px;" onchange="updateApplicationStatus('${app.application_id}', this.value)">
+                    ${statusOptions}
+                  </select>
+                  <button class="btn btn-success" onclick="openOfferModal('${app.application_id}')">Offer</button>
+                </div>
+              </td>
+            </tr>
+          `;
+          tbody.insertAdjacentHTML('beforeend', row);
+        });
+
+        document.getElementById('select-all').addEventListener('change', (e) => {
+          document.querySelectorAll('.applicant-checkbox').forEach(cb => cb.checked = e.target.checked);
+        });
+
+      } catch (e) {
+        showToast(e.message, 'error');
+      }
+    }
+
+    async function updateApplicationStatus(appId, status) {
+      try {
+        await api(`/company/applicant-status`, {
+          method: 'PUT',
+          body: { application_id: parseInt(appId), status }
+        });
+        showToast('Status updated', 'success');
+      } catch (e) {
+        showToast(e.message, 'error');
+      }
+    }
+
+    async function downloadResumes() {
+      const checkboxes = document.querySelectorAll('.applicant-checkbox:checked');
+      if (checkboxes.length === 0) {
+        showToast('Select at least one applicant', 'error');
+        return;
+      }
+      
+      const studentIds = Array.from(checkboxes).map(cb => parseInt(cb.value));
+      const jobId = document.getElementById('job-filter').value;
+
+      try {
+        await api(`/company/job/${jobId}/applicants/download-resumes`, {
+          method: 'POST',
+          body: { student_ids: studentIds }
+        });
+        showToast('Resumes download initiated', 'success');
+      } catch (e) {
+        showToast(e.message, 'error');
+      }
+    }
+
+    function openBulkUpload() {
+      document.getElementById('bulk-upload-modal').classList.add('active');
+    }
+
+    function closeBulkUpload() {
+      document.getElementById('bulk-upload-modal').classList.remove('active');
+    }
+
+    async function submitBulkUpload(e) {
+      e.preventDefault();
+      const jobId = document.getElementById('job-filter').value;
+      const file = document.getElementById('bulk-file').files[0];
+      
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const auth = getAuth();
+        const resp = await fetch(`${API_BASE}/company/job/${jobId}/bulk-status-upload`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${auth.token}` },
+          body: formData
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error);
+        
+        showToast(`${data.updated_count} records updated`, 'success');
+        closeBulkUpload();
+        loadApplicants();
+      } catch (e) {
+        showToast(e.message, 'error');
+      }
+    }
+
+    // ========== OFFER LETTERS ==========
+    function openOfferModal(appId) {
+      document.getElementById('offer-application-id').value = appId;
+      document.getElementById('offer-modal').classList.add('active');
+    }
+
+    function closeOfferModal() {
+      document.getElementById('offer-modal').classList.remove('active');
+    }
+
+    async function submitOfferLetter(e) {
+      e.preventDefault();
+      const appId = document.getElementById('offer-application-id').value;
+      const form = document.getElementById('offer-form');
+      const formData = new FormData(form);
+      const body = Object.fromEntries(formData);
+
+      try {
+        await api(`/company/application/${appId}/generate-offer`, {
+          method: 'POST',
+          body
+        });
+        showToast('Offer letter generated and sent', 'success');
+        closeOfferModal();
+        form.reset();
+      } catch (e) {
+        showToast(e.message, 'error');
+      }
+    }
+
+    // ========== INTERVIEWS TAB ==========
+    async function loadInterviewRounds() {
+      const jobId = document.getElementById('interview-job-filter').value;
+      if (!jobId) return;
+
+      try {
+        const response = await api(`/company/job/${jobId}/hiring-rounds`);
+        const container = document.getElementById('hiring-rounds-container');
+        container.innerHTML = '';
+
+        response.forEach(round => {
+          const html = `
+            <div class="card">
+              <h3>${round.round_type}</h3>
+              <p>${round.description || ''}</p>
+              <button class="btn btn-primary" onclick="loadInterviewSlots(${round.id})">Manage Slots</button>
+            </div>
+          `;
+          container.insertAdjacentHTML('beforeend', html);
+        });
+
+      } catch (e) {
+        showToast(e.message, 'error');
+      }
+    }
+
+    async function loadInterviewSlots(roundId) {
+      try {
+        const response = await api(`/company/job/${document.getElementById('interview-job-filter').value}/interview-slots?hiring_round_id=${roundId}`);
+        const container = document.getElementById('interview-slots-container');
+        container.innerHTML = '<h3>Available Slots</h3>';
+
+        response.forEach(slot => {
+          const html = `
+            <div class="card">
+              <p><strong>${slot.slot_date} at ${slot.slot_time}</strong></p>
+              <p>Interviewer: ${slot.interviewer_name || 'N/A'}</p>
+              <p>Capacity: ${slot.current_bookings}/${slot.max_capacity}</p>
+            </div>
+          `;
+          container.insertAdjacentHTML('beforeend', html);
+        });
+
+      } catch (e) {
+        showToast(e.message, 'error');
+      }
+    }
+
+    // ========== INITIALIZATION ==========
+    async function initializeDashboard() {
+      try {
+        const auth = getAuth();
+        if (!auth) return;
+
+        document.querySelector('[data-company-name]').textContent = auth.user.email;
+        
+        // Load jobs for filters
+        const jobsResp = await api('/company/jobs');
+        const jobSelect = document.getElementById('job-filter');
+        const interviewSelect = document.getElementById('interview-job-filter');
+        
+        jobsResp.forEach(job => {
+          jobSelect.innerHTML += `<option value="${job.id}">${job.title}</option>`;
+          interviewSelect.innerHTML += `<option value="${job.id}">${job.title}</option>`;
+        });
+
+        // Load overview stats
+        loadOverview();
+        
+        initializeWizard();
+      } catch (e) {
+        showToast(e.message, 'error');
+      }
+    }
+
+    async function loadOverview() {
+      try {
+        const response = await api('/company/jobs');
+        const statsContainer = document.getElementById('stats-container');
+        const jobsList = document.getElementById('jobs-list');
+
+        const totalApps = response.reduce((sum, job) => sum + (job.applications?.length || 0), 0);
+        const approvedJobs = response.filter(j => j.status === 'Approved').length;
+
+        statsContainer.innerHTML = `
+          <div class="stat-card">
+            <div class="value">${response.length}</div>
+            <div class="label">Total Job Postings</div>
+          </div>
+          <div class="stat-card">
+            <div class="value">${approvedJobs}</div>
+            <div class="label">Active Jobs</div>
+          </div>
+          <div class="stat-card">
+            <div class="value">${totalApps}</div>
+            <div class="label">Total Applications</div>
+          </div>
+        `;
+
+        jobsList.innerHTML = '';
+        response.forEach(job => {
+          jobsList.innerHTML += `
+            <div class="card">
+              <h3>${job.title}</h3>
+              <p>${job.location} | ${job.salary_range}</p>
+              <span class="badge badge-primary">${job.status}</span>
+            </div>
+          `;
+        });
+
+      } catch (e) {
+        showToast(e.message, 'error');
+      }
+    }
+
+    document.querySelector('[data-logout]').addEventListener('click', () => {
+      localStorage.clear();
+      window.location.href = 'index.html';
+    });
+
+    initializeDashboard();
+  </script>
+</body>
+</html>

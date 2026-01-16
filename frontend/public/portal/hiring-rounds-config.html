@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configure Hiring Process - Placement Portal</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        /* Hiring Rounds Configuration - Matching Portal Theme */
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 28px;
+        }
+        
+        /* Header */
+        .page-header {
+            background: var(--glass);
+            border: var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+        
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        
+        .page-header p {
+            color: var(--muted);
+            font-size: 15px;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 16px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+        
+        .breadcrumb a {
+            color: var(--accent-2);
+            transition: color var(--transition);
+        }
+        
+        .breadcrumb a:hover {
+            color: var(--accent);
+        }
+        
+        /* Stepper */
+        .stepper {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            position: relative;
+        }
+        
+        .stepper::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 0;
+        }
+        
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .step-indicator {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--glass);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--muted);
+            transition: all var(--transition);
+            backdrop-filter: blur(18px);
+        }
+        
+        .step.active .step-indicator {
+            background: linear-gradient(135deg, #7c3aed, #06b6d4);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 10px 40px rgba(124, 58, 237, 0.35);
+        }
+        
+        .step.completed .step-indicator {
+            background: linear-gradient(135deg, #22c55e, #14b8a6);
+            border-color: transparent;
+            color: white;
+        }
+        
+        .step-label {
+            font-size: 13px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+        
+        .step.active .step-label {
+            color: var(--accent-2);
+            font-weight: 700;
+        }
+        
+        /* Step Content */
+        .step-content {
+            background: var(--glass);
+            border: var(--border);
+            padding: 32px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+            min-height: 500px;
+        }
+        
+        .step-content-inner {
+            display: none;
+        }
+        
+        .step-content-inner.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Job Overview (Step 1) */
+        .job-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .overview-section h3 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            color: var(--text);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        
+        .info-row {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: var(--muted);
+            min-width: 140px;
+            font-size: 14px;
+        }
+        
+        .info-value {
+            color: var(--text);
+            font-size: 14px;
+        }
+        
+        /* Rounds Configuration (Step 2) */
+        .rounds-container {
+            margin-top: 24px;
+        }
+        
+        .round-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-sm);
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: all var(--transition);
+            cursor: move;
+            backdrop-filter: blur(18px);
+        }
+        
+        .round-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 10px 40px rgba(124, 58, 237, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .round-card.dragging {
+            opacity: 0.5;
+        }
+        
+        .round-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .round-title {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .round-number {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, #7c3aed, #06b6d4);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+        }
+        
+        .round-name-input {
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+            padding: 8px;
+            color: var(--text);
+            width: 300px;
+        }
+        
+        .round-name-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-sm);
+        }
+        
+        .round-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .round-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .required {
+            color: var(--error);
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="time"],
+        select,
+        textarea {
+            padding: 12px;
+            border: var(--border);
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: var(--text);
+            transition: all var(--transition);
+            font-family: inherit;
+        }
+        
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+        }
+        
+        select {
+            cursor: pointer;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius-sm);
+            border: var(--border);
+        }
+        
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+        }
+        
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--accent);
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 12px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #7c3aed, #06b6d4);
+            color: white;
+            box-shadow: 0 10px 40px rgba(124, 58, 237, 0.35);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 50px rgba(124, 58, 237, 0.45);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent);
+        }
+        
+        .btn-danger {
+            background: var(--error);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-icon {
+            padding: 8px;
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+        }
+        
+        .add-round-btn {
+            width: 100%;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            background: transparent;
+            color: var(--accent-2);
+            padding: 20px;
+            margin-top: 16px;
+        }
+        
+        .add-round-btn:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: var(--accent-2);
+        }
+        
+        /* Navigation Buttons */
+        .step-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 28px;
+            padding-top: 28px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        /* Review & Submit (Step 3) */
+        .review-section {
+            margin-bottom: 28px;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .review-header h3 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text);
+        }
+        
+        .round-summary {
+            background: rgba(255, 255, 255, 0.04);
+            border-left: 4px solid var(--accent);
+            padding: 20px;
+            margin-bottom: 16px;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            backdrop-filter: blur(18px);
+        }
+        
+        .round-summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .round-summary h4 {
+            font-size: 18px;
+            color: var(--text);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        
+        .round-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+        
+        .detail-item {
+            font-size: 13px;
+        }
+        
+        .detail-label {
+            color: var(--muted);
+            display: block;
+            font-weight: 600;
+        }
+        
+        .detail-value {
+            color: var(--text);
+            font-weight: 600;
+            display: block;
+            margin-top: 4px;
+        }
+        
+        /* Alert */
+        .alert {
+            padding: 16px 20px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            backdrop-filter: blur(18px);
+        }
+        
+        .alert-info {
+            background: rgba(37, 99, 235, 0.15);
+            border-left: 4px solid var(--accent);
+            color: var(--text);
+            border: 1px solid rgba(37, 99, 235, 0.3);
+        }
+        
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.15);
+            border-left: 4px solid var(--accent-3);
+            color: var(--text);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        
+        .alert-success {
+            background: rgba(34, 197, 94, 0.15);
+            border-left: 4px solid var(--success);
+            color: var(--text);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        
+        /* Loading State */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .job-overview,
+            .round-form,
+            .round-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .stepper {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .stepper::before {
+                display: none;
+            }
+            
+            .step {
+                display: flex;
+                align-items: center;
+                text-align: left;
+                gap: 1rem;
+            }
+            
+            .step-indicator {
+                margin: 0;
+            }
+        }
+        
+        /* Drag and Drop Visual Feedback */
+        .drag-handle {
+            cursor: move;
+            color: var(--text-secondary);
+            font-size: 1.25rem;
+            padding: 0.5rem;
+        }
+        
+        .drag-handle:hover {
+            color: var(--primary-color);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="breadcrumb">
+                <span>Company Dashboard</span>
+                <span>›</span>
+                <span>Jobs</span>
+                <span>›</span>
+                <span>Configure Hiring Process</span>
+            </div>
+            <h1>Configure Hiring Process</h1>
+            <p id="jobTitleDisplay">Set up your recruitment workflow with multiple rounds</p>
+        </div>
+
+        <!-- Stepper -->
+        <div class="stepper">
+            <div class="step active" data-step="1">
+                <div class="step-indicator">1</div>
+                <div class="step-label">Job Overview</div>
+            </div>
+            <div class="step" data-step="2">
+                <div class="step-indicator">2</div>
+                <div class="step-label">Configure Rounds</div>
+            </div>
+            <div class="step" data-step="3">
+                <div class="step-indicator">3</div>
+                <div class="step-label">Review & Submit</div>
+            </div>
+        </div>
+
+        <!-- Step Content Container -->
+        <div class="step-content">
+            <!-- Step 1: Job Overview -->
+            <div class="step-content-inner active" data-step="1">
+                <h2 style="margin-bottom: 1.5rem;">Job Details</h2>
+                <div class="alert alert-info">
+                    <span>📋</span>
+                    <span>Review the job details below. You'll configure the hiring rounds in the next step.</span>
+                </div>
+                
+                <div class="job-overview" id="jobOverview">
+                    <!-- Job details will be populated here -->
+                </div>
+                
+                <div class="step-navigation">
+                    <button class="btn btn-secondary" onclick="window.location.href='company.html'">
+                        ← Back to Dashboard
+                    </button>
+                    <button class="btn btn-primary" onclick="nextStep()">
+                        Continue to Rounds Configuration →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Configure Rounds -->
+            <div class="step-content-inner" data-step="2">
+                <h2 style="margin-bottom: 1rem;">Hiring Rounds Configuration</h2>
+                <div class="alert alert-warning">
+                    <span>⚠️</span>
+                    <span>Define each round of your hiring process. You can drag and drop to reorder rounds.</span>
+                </div>
+                
+                <div class="rounds-container" id="roundsContainer">
+                    <!-- Rounds will be populated here -->
+                </div>
+                
+                <button class="btn add-round-btn" onclick="addNewRound()">
+                    <span style="font-size: 1.5rem;">+</span>
+                    Add Another Round
+                </button>
+                
+                <div class="step-navigation">
+                    <button class="btn btn-secondary" onclick="previousStep()">
+                        ← Back
+                    </button>
+                    <button class="btn btn-primary" onclick="nextStep()">
+                        Review Configuration →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Review & Submit -->
+            <div class="step-content-inner" data-step="3">
+                <h2 style="margin-bottom: 1rem;">Review Hiring Process</h2>
+                <div class="alert alert-success">
+                    <span>✓</span>
+                    <span>Review your configuration before submitting. You can go back to make changes.</span>
+                </div>
+                
+                <div class="review-section">
+                    <div class="review-header">
+                        <h3>Configured Rounds</h3>
+                        <span id="totalRoundsCount" style="color: var(--primary-color); font-weight: 600;"></span>
+                    </div>
+                    <div id="reviewRounds">
+                        <!-- Review content will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="loading" id="submitLoading">
+                    <div class="spinner"></div>
+                    <p>Saving your hiring process configuration...</p>
+                </div>
+                
+                <div class="step-navigation">
+                    <button class="btn btn-secondary" onclick="previousStep()">
+                        ← Back to Edit
+                    </button>
+                    <button class="btn btn-success" onclick="submitConfiguration()" style="font-size: 1.125rem; padding: 1rem 2rem;">
+                        ✓ Submit Configuration
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/hiring-rounds.js"></script>
+</body>
+</html>

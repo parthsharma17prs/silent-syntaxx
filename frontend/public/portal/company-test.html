@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Company Section Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #1a1a2e;
+      color: #fff;
+    }
+    .test-result {
+      background: #16213e;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 10px 0;
+      border-left: 4px solid #0f3460;
+    }
+    .success { border-left-color: #4caf50; }
+    .error { border-left-color: #f44336; }
+    .warning { border-left-color: #ff9800; }
+    pre {
+      background: #0f3460;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    button {
+      background: #6366f1;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background: #4f46e5;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 Company Section Diagnostic</h1>
+  
+  <div id="results"></div>
+  
+  <div style="margin-top: 20px;">
+    <button onclick="runTests()">🔄 Run Tests</button>
+    <button onclick="testBackend()">🔌 Test Backend Connection</button>
+    <button onclick="testLogin()">🔐 Test Login</button>
+    <button onclick="clearStorage()">🗑️ Clear Storage</button>
+  </div>
+
+  <script>
+    const API_BASE = '/api';
+    const results = document.getElementById('results');
+
+    function addResult(title, message, type = 'info') {
+      const div = document.createElement('div');
+      div.className = `test-result ${type}`;
+      div.innerHTML = `<h3>${title}</h3><pre>${message}</pre>`;
+      results.appendChild(div);
+    }
+
+    function clearResults() {
+      results.innerHTML = '';
+    }
+
+    async function testBackend() {
+      clearResults();
+      addResult('Testing Backend Connection', 'Checking if backend is running...', 'warning');
+      
+      try {
+        const response = await fetch(`${API_BASE}/health`);
+        const data = await response.json();
+        
+        if (response.ok) {
+          addResult('✅ Backend Connection', JSON.stringify(data, null, 2), 'success');
+        } else {
+          addResult('❌ Backend Error', `Status: ${response.status}\\n${JSON.stringify(data, null, 2)}`, 'error');
+        }
+      } catch (err) {
+        addResult('❌ Backend Connection Failed', err.message, 'error');
+      }
+    }
+
+    async function testLogin() {
+      clearResults();
+      addResult('Testing Company Login', 'Attempting to login as company@tech.com...', 'warning');
+      
+      try {
+        const response = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: 'company@tech.com',
+            password: 'Company@123'
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          localStorage.setItem('token', data.access_token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          if (data.profile) {
+            localStorage.setItem('profile', JSON.stringify(data.profile));
+          }
+          
+          addResult('✅ Login Successful', 
+            `Token: ${data.access_token.substring(0, 50)}...\\n` +
+            `User: ${JSON.stringify(data.user, null, 2)}\\n` +
+            `Profile: ${JSON.stringify(data.profile, null, 2)}`, 
+            'success');
+            
+          // Now test company endpoints
+          await testCompanyEndpoints(data.access_token);
+        } else {
+          addResult('❌ Login Failed', 
+            `Status: ${response.status}\\n${JSON.stringify(data, null, 2)}`, 
+            'error');
+        }
+      } catch (err) {
+        addResult('❌ Login Error', err.message, 'error');
+      }
+    }
+
+    async function testCompanyEndpoints(token) {
+      addResult('Testing Company Endpoints', 'Checking company-specific APIs...', 'warning');
+      
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      };
+      
+      // Test 1: Get jobs
+      try {
+        const response = await fetch(`${API_BASE}/company/jobs`, { headers });
+        const data = await response.json();
+        
+        if (response.ok) {
+          addResult('✅ GET /company/jobs', 
+            `Found ${data.length} jobs:\\n${JSON.stringify(data, null, 2)}`, 
+            'success');
+        } else {
+          addResult('❌ GET /company/jobs', 
+            `Status: ${response.status}\\n${JSON.stringify(data, null, 2)}`, 
+            'error');
+        }
+      } catch (err) {
+        addResult('❌ GET /company/jobs', err.message, 'error');
+      }
+      
+      // Test 2: Get sessions
+      try {
+        const response = await fetch(`${API_BASE}/company/sessions`, { headers });
+        const data = await response.json();
+        
+        if (response.ok) {
+          addResult('✅ GET /company/sessions', 
+            `Found ${data.length} sessions:\\n${JSON.stringify(data, null, 2)}`, 
+            'success');
+        } else {
+          addResult('❌ GET /company/sessions', 
+            `Status: ${response.status}\\n${JSON.stringify(data, null, 2)}`, 
+            'error');
+        }
+      } catch (err) {
+        addResult('❌ GET /company/sessions', err.message, 'error');
+      }
+      
+      // Test 3: Get profile
+      try {
+        const response = await fetch(`${API_BASE}/company/profile`, { headers });
+        const data = await response.json();
+        
+        if (response.ok) {
+          addResult('✅ GET /company/profile', 
+            JSON.stringify(data, null, 2), 
+            'success');
+        } else {
+          addResult('❌ GET /company/profile', 
+            `Status: ${response.status}\\n${JSON.stringify(data, null, 2)}`, 
+            'error');
+        }
+      } catch (err) {
+        addResult('❌ GET /company/profile', err.message, 'error');
+      }
+    }
+
+    async function runTests() {
+      clearResults();
+      
+      // Test 1: Check localStorage
+      addResult('Local Storage Check', 
+        `Token: ${localStorage.getItem('token') ? 'Present ✅' : 'Missing ❌'}\\n` +
+        `User: ${localStorage.getItem('user') ? 'Present ✅' : 'Missing ❌'}\\n` +
+        `Profile: ${localStorage.getItem('profile') ? 'Present ✅' : 'Missing ❌'}`,
+        localStorage.getItem('token') ? 'success' : 'warning');
+      
+      // Test 2: Check if logged in
+      const token = localStorage.getItem('token');
+      const user = localStorage.getItem('user');
+      
+      if (token && user) {
+        const userData = JSON.parse(user);
+        addResult('User Info', 
+          `Email: ${userData.email}\\n` +
+          `Role ID: ${userData.role_id} ${userData.role_id === 2 ? '(Company ✅)' : '(Not Company ❌)'}\\n` +
+          `Verified: ${userData.is_verified ? 'Yes ✅' : 'No ❌'}`,
+          userData.role_id === 2 ? 'success' : 'error');
+        
+        if (userData.role_id === 2) {
+          await testCompanyEndpoints(token);
+        }
+      } else {
+        addResult('⚠️ Not Logged In', 'Please use "Test Login" button to login first', 'warning');
+      }
+    }
+
+    function clearStorage() {
+      localStorage.clear();
+      sessionStorage.clear();
+      addResult('🗑️ Storage Cleared', 'All local storage and session storage cleared', 'success');
+    }
+
+    // Auto-run tests on load
+    runTests();
+  </script>
+</body>
+</html>
